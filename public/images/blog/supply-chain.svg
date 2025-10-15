@@ -1,0 +1,21 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="600" fill="#f8fafc"/>
+<rect x="50" y="50" width="700" height="500" rx="12" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="2"/>
+<rect x="100" y="200" width="80" height="80" rx="8" fill="#10b981"/>
+<rect x="250" y="200" width="80" height="80" rx="8" fill="#3b82f6"/>
+<rect x="400" y="200" width="80" height="80" rx="8" fill="#f59e0b"/>
+<rect x="550" y="200" width="80" height="80" rx="8" fill="#ef4444"/>
+<path d="M180 240 L250 240" stroke="#6b7280" stroke-width="4" marker-end="url(#arrowhead)"/>
+<path d="M330 240 L400 240" stroke="#6b7280" stroke-width="4" marker-end="url(#arrowhead)"/>
+<path d="M480 240 L550 240" stroke="#6b7280" stroke-width="4" marker-end="url(#arrowhead)"/>
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+<polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+</marker>
+</defs>
+<text x="140" y="320" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="14" font-weight="500">Raw Materials</text>
+<text x="290" y="320" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="14" font-weight="500">Manufacturing</text>
+<text x="440" y="320" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="14" font-weight="500">Distribution</text>
+<text x="590" y="320" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="14" font-weight="500">Retail</text>
+<text x="400" y="450" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="24" font-weight="600">Supply Chain Management</text>
+</svg>

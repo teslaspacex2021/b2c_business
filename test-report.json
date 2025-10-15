@@ -1,0 +1,289 @@
+{
+  "summary": {
+    "total": 26,
+    "successful": 9,
+    "failed": 17,
+    "successRate": "34.62"
+  },
+  "results": [
+    {
+      "name": "首页",
+      "path": "/",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.523Z",
+      "hasTitle": false,
+      "hasNavigation": false
+    },
+    {
+      "name": "关于页面",
+      "path": "/about",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.565Z"
+    },
+    {
+      "name": "联系页面",
+      "path": "/contact",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.604Z"
+    },
+    {
+      "name": "产品页面",
+      "path": "/product",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.640Z"
+    },
+    {
+      "name": "博客页面",
+      "path": "/blog",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.676Z"
+    },
+    {
+      "name": "登录页面",
+      "path": "/login",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.712Z"
+    },
+    {
+      "name": "注册页面",
+      "path": "/register",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.746Z"
+    },
+    {
+      "name": "管理员登录页面",
+      "path": "/admin-login",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.781Z",
+      "requiresAuth": false,
+      "hasAdminContent": false
+    },
+    {
+      "name": "用户仪表板",
+      "path": "/dashboard",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.814Z"
+    },
+    {
+      "name": "用户资料页面",
+      "path": "/profile",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.846Z"
+    },
+    {
+      "name": "报价页面",
+      "path": "/quote",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.880Z"
+    },
+    {
+      "name": "支付成功页面",
+      "path": "/payment/success",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.911Z"
+    },
+    {
+      "name": "支付取消页面",
+      "path": "/payment/cancel",
+      "statusCode": 500,
+      "success": false,
+      "contentLength": 6807,
+      "hasError": true,
+      "hasContent": true,
+      "timestamp": "2025-10-14T09:31:07.940Z"
+    },
+    {
+      "name": "管理后台首页",
+      "path": "/admin",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.943Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "管理仪表板",
+      "path": "/admin/dashboard",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.946Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "产品管理",
+      "path": "/admin/products",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.949Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "博客管理",
+      "path": "/admin/blogs",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.952Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "用户管理",
+      "path": "/admin/users",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.955Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "订单管理",
+      "path": "/admin/orders",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.957Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "数据分析",
+      "path": "/admin/analytics",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.960Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "系统设置",
+      "path": "/admin/settings",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.962Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "客户支持",
+      "path": "/admin/support",
+      "statusCode": 307,
+      "success": true,
+      "contentLength": 12,
+      "hasError": false,
+      "hasContent": false,
+      "timestamp": "2025-10-14T09:31:07.964Z",
+      "requiresAuth": false,
+      "hasAdminContent": true
+    },
+    {
+      "name": "NextAuth登录API",
+      "path": "/api/auth/signin",
+      "method": "GET",
+      "statusCode": 500,
+      "success": false,
+      "contentType": "text/html; charset=utf-8",
+      "timestamp": "2025-10-14T09:31:07.995Z"
+    },
+    {
+      "name": "产品API",
+      "path": "/api/products",
+      "method": "GET",
+      "statusCode": 500,
+      "success": false,
+      "contentType": "text/html; charset=utf-8",
+      "timestamp": "2025-10-14T09:31:08.023Z"
+    },
+    {
+      "name": "博客API",
+      "path": "/api/blogs",
+      "method": "GET",
+      "statusCode": 500,
+      "success": false,
+      "contentType": "text/html; charset=utf-8",
+      "timestamp": "2025-10-14T09:31:08.105Z"
+    },
+    {
+      "name": "联系表单API",
+      "path": "/api/contact",
+      "method": "POST",
+      "statusCode": 500,
+      "success": false,
+      "contentType": "text/html; charset=utf-8",
+      "timestamp": "2025-10-14T09:31:08.179Z"
+    }
+  ],
+  "timestamp": "2025-10-14T09:31:08.179Z"
+}

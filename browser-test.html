@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2B Platform Enhancement - Browser Tests</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-title {
+            color: #1e293b;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            background: #f1f5f9;
+        }
+        .test-item.success {
+            background: #dcfce7;
+            border-left: 4px solid #22c55e;
+        }
+        .test-item.warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+        }
+        .test-item.error {
+            background: #fee2e2;
+            border-left: 4px solid #ef4444;
+        }
+        .status-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        .test-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .test-link:hover {
+            text-decoration: underline;
+        }
+        .instructions {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .instructions h4 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 16px;
+        }
+        .feature-card h4 {
+            color: #374151;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        .feature-card ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .feature-card li {
+            margin-bottom: 4px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 B2B Platform Enhancement - Browser Testing Guide</h1>
+    <p>Use this guide to manually test all implemented features in your browser.</p>
+
+    <div class="test-section">
+        <h2 class="test-title">🚀 Server Status</h2>
+        <div class="test-item" id="server-status">
+            <span class="status-icon">⏳</span>
+            <span>Checking development server...</span>
+        </div>
+        <div class="instructions">
+            <h4>Prerequisites:</h4>
+            <ol>
+                <li>Ensure development server is running: <code>npm run dev</code></li>
+                <li>Database should be accessible (PostgreSQL on port 5433)</li>
+                <li>Environment variables should be configured</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">💳 Payment Functionality Tests</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Admin Payment Settings</h4>
+                <ul>
+                    <li><a href="http://localhost:3000/admin/payments/settings" class="test-link" target="_blank">Payment Settings Page</a></li>
+                    <li>Test Stripe key configuration</li>
+                    <li>Test connection validation</li>
+                    <li>Verify encrypted storage</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Product Payment Integration</h4>
+                <ul>
+                    <li><a href="http://localhost:3000/product" class="test-link" target="_blank">Products Page</a></li>
+                    <li>Click on any product</li>
+                    <li>Test "Buy Now" button</li>
+                    <li>Verify Stripe Payment Element</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>Test Steps:</h4>
+            <ol>
+                <li>Navigate to Admin → Payment Setup</li>
+                <li>Configure Stripe keys (use test keys)</li>
+                <li>Test connection to Stripe</li>
+                <li>Go to any product page</li>
+                <li>Click "Buy Now" to open payment dialog</li>
+                <li>Verify Stripe Payment Element loads</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">💬 Customer Support Tests</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Support Widget (Logged Out)</h4>
+                <ul>
+                    <li><a href="http://localhost:3000/" class="test-link" target="_blank">Home Page (Logged Out)</a></li>
+                    <li>Click support widget</li>
+                    <li>Verify login requirement</li>
+                    <li>Test contact form</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Support Widget (Logged In)</h4>
+                <ul>
+                    <li><a href="http://localhost:3000/login" class="test-link" target="_blank">Login Page</a></li>
+                    <li>Login and return to home</li>
+                    <li>Test live chat functionality</li>
+                    <li>Verify social media integration</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>Test Steps:</h4>
+            <ol>
+                <li>Visit home page without logging in</li>
+                <li>Click support widget → should show login requirement</li>
+                <li>Test contact form and social media tabs</li>
+                <li>Login to the system</li>
+                <li>Click support widget → should allow chat</li>
+                <li>Test all widget tabs (Chat, Contact, FAQ, Social)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">🎛️ Admin Layout Tests</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Navigation Optimization</h4>
+                <ul>
+                    <li><a href="http://localhost:3000/admin" class="test-link" target="_blank">Admin Dashboard</a></li>
+                    <li>Verify streamlined navigation</li>
+                    <li>Check for duplicate entries</li>
+                    <li>Test Payment Setup link</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h4>Dashboard Statistics</h4>
+                <ul>
+                    <li>Verify compact statistics layout</li>
+                    <li>Check responsive design</li>
+                    <li>Test quick actions</li>
+                    <li>Verify system status</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>Test Steps:</h4>
+            <ol>
+                <li>Login as admin user</li>
+                <li>Navigate to admin dashboard</li>
+                <li>Verify compact statistics grid (6 columns)</li>
+                <li>Check navigation has 4 main sections</li>
+                <li>Test "Payment Setup" navigation item</li>
+                <li>Verify no duplicate "Customers" entries</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">📝 Blog Functionality Tests</h2>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Blog Navigation</h4>
+                <ul>
+                    <li><a href="http://localhost:3000/blog" class="test-link" target="_blank">Blog Page</a></li>
+                    <li>Click on any blog post</li>
+                    <li>Verify detail page loads</li>
+                    <li>Test navigation breadcrumbs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h4>Test Steps:</h4>
+            <ol>
+                <li>Navigate to blog page</li>
+                <li>Click on any blog post title</li>
+                <li>Verify blog detail page loads without errors</li>
+                <li>Check that metadata is properly generated</li>
+                <li>Test "Back to Blog" link</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">📱 Responsive Design Tests</h2>
+        
+        <div class="instructions">
+            <h4>Test Different Screen Sizes:</h4>
+            <ol>
+                <li><strong>Desktop (1200px+):</strong> All features should work normally</li>
+                <li><strong>Tablet (768px-1199px):</strong> Navigation should collapse, statistics should stack</li>
+                <li><strong>Mobile (320px-767px):</strong> All components should be touch-friendly</li>
+            </ol>
+            <p>Use browser developer tools to test different viewport sizes.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">✅ Test Checklist</h2>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test1">
+            <label for="test1">Payment settings page loads and allows Stripe configuration</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test2">
+            <label for="test2">Product detail pages load and show payment dialog</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test3">
+            <label for="test3">Support widget requires login for chat</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test4">
+            <label for="test4">Support widget includes social media integration</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test5">
+            <label for="test5">Admin navigation is streamlined (no duplicates)</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test6">
+            <label for="test6">Admin dashboard uses compact statistics layout</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test7">
+            <label for="test7">Blog detail pages load without errors</label>
+        </div>
+        
+        <div class="test-item">
+            <input type="checkbox" id="test8">
+            <label for="test8">All pages are responsive on mobile devices</label>
+        </div>
+    </div>
+
+    <script>
+        // Check if development server is running
+        async function checkServerStatus() {
+            const statusElement = document.getElementById('server-status');
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/site-config');
+                if (response.ok) {
+                    statusElement.className = 'test-item success';
+                    statusElement.innerHTML = '<span class="status-icon">✅</span><span>Development server is running on http://localhost:3000</span>';
+                } else {
+                    throw new Error('Server responded with error');
+                }
+            } catch (error) {
+                statusElement.className = 'test-item error';
+                statusElement.innerHTML = '<span class="status-icon">❌</span><span>Development server is not running. Please start with: npm run dev</span>';
+            }
+        }
+
+        // Check server status when page loads
+        checkServerStatus();
+
+        // Auto-save checklist state
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            const savedState = localStorage.getItem(checkbox.id);
+            if (savedState === 'true') {
+                checkbox.checked = true;
+            }
+            
+            checkbox.addEventListener('change', () => {
+                localStorage.setItem(checkbox.id, checkbox.checked);
+            });
+        });
+    </script>
+</body>
+</html>

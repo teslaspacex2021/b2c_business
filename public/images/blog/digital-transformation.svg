@@ -1,0 +1,20 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="600" fill="#f8fafc"/>
+<rect x="50" y="50" width="700" height="500" rx="12" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="2"/>
+<rect x="150" y="150" width="120" height="80" rx="8" fill="#6366f1"/>
+<rect x="350" y="150" width="120" height="80" rx="8" fill="#8b5cf6"/>
+<rect x="550" y="150" width="120" height="80" rx="8" fill="#ec4899"/>
+<rect x="250" y="300" width="120" height="80" rx="8" fill="#06b6d4"/>
+<rect x="450" y="300" width="120" height="80" rx="8" fill="#10b981"/>
+<circle cx="400" cy="250" r="30" fill="#f59e0b"/>
+<path d="M270 190 L370 220" stroke="#6b7280" stroke-width="2"/>
+<path d="M470 190 L550 190" stroke="#6b7280" stroke-width="2"/>
+<path d="M350 250 L250 320" stroke="#6b7280" stroke-width="2"/>
+<path d="M450 250 L450 300" stroke="#6b7280" stroke-width="2"/>
+<text x="210" y="200" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="600">Cloud</text>
+<text x="410" y="200" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="600">AI/ML</text>
+<text x="610" y="200" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="600">IoT</text>
+<text x="310" y="350" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="600">Analytics</text>
+<text x="510" y="350" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="600">Automation</text>
+<text x="400" y="480" text-anchor="middle" fill="#374151" font-family="Arial, sans-serif" font-size="24" font-weight="600">Digital Transformation</text>
+</svg>

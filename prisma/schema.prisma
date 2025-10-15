@@ -1,0 +1,892 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for admin authentication and management
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String
+  password          String
+  role              Role     @default(USER)
+  status            Status   @default(ACTIVE)
+  company           String?
+  phone             String?
+  subscribeNewsletter Boolean @default(false)
+  emailVerified     DateTime?
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLogin         DateTime?
+
+  // Relations
+  blogPosts BlogPost[]
+  assignedCustomers Customer[]
+  createdQuotes     Quote[]
+  approvedQuotes    Quote[] @relation("QuoteApprover")
+  interactions      CustomerInteraction[]
+  
+  // Support relations
+  supportSessions   SupportSession[]
+  assignedSessions  SupportSession[] @relation("AssignedSessions")
+  transfersFrom     SupportTransfer[] @relation("TransferFrom")
+  transfersTo       SupportTransfer[] @relation("TransferTo")
+  knowledgeArticles SupportKnowledge[]
+  quickReplies      SupportQuickReply[]
+
+  @@map("users")
+}
+
+// Category model for hierarchical categorization
+model Category {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String?     @db.Text
+  image       String?
+  parentId    String?
+  parent      Category?   @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[]  @relation("CategoryHierarchy")
+  products    Product[]
+  published   Boolean     @default(true)
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("categories")
+}
+
+// Product model for catalog management
+model Product {
+  id            String            @id @default(cuid())
+  title         String
+  summary       String?           @db.Text  // Brief product summary
+  description   String            @db.Text  // Detailed description
+  sku           String?           @unique
+  price         Decimal?          @db.Decimal(10, 2)
+  comparePrice  Decimal?          @db.Decimal(10, 2)
+  costPrice     Decimal?          @db.Decimal(10, 2)
+  stock         Int               @default(0)
+  lowStockAlert Int               @default(10)
+  weight        Decimal?          @db.Decimal(8, 3)
+  dimensions    Json?             // {length, width, height, unit}
+  images        String[]
+  category      String            // Keep for backward compatibility
+  subcategory   String?           // Keep for backward compatibility
+  categoryId    String?           // New relation to Category model
+  categoryRef   Category?         @relation(fields: [categoryId], references: [id])
+  brand         String?
+  tags          String[]
+  specifications Json?
+  published     Boolean           @default(false)
+  featured      Boolean           @default(false)
+  seoTitle      String?
+  seoDescription String?
+  metaKeywords  String[]
+  views         Int               @default(0)
+  orders        Int               @default(0)
+  rating        Decimal?          @db.Decimal(2, 1)
+  reviewCount   Int               @default(0)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@map("products")
+}
+
+// Blog post model for content management
+model BlogPost {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String?  @unique
+  content        String   @db.Text
+  excerpt        String?  @db.Text
+  featuredImage  String?
+  imageAlt       String?
+  tags           String[]
+  category       String?
+  published      Boolean  @default(false)
+  featured       Boolean  @default(false)
+  publishedAt    DateTime?
+  scheduledAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // SEO fields
+  seoTitle       String?
+  seoDescription String?
+  metaKeywords   String[]
+  
+  // Analytics
+  views          Int      @default(0)
+  likes          Int      @default(0)
+  shares         Int      @default(0)
+  
+  // Content settings
+  allowComments  Boolean  @default(true)
+  readingTime    Int?     // in minutes
+  
+  // Relations
+  authorId       String
+  author         User     @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+}
+
+// Contact form submissions
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  subject   String
+  message   String   @db.Text
+  status    ContactStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  customer  Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+
+  @@map("contacts")
+}
+
+// 客户管理
+model Customer {
+  id              String   @id @default(cuid())
+  name            String
+  email           String   @unique
+  phone           String?
+  company         String?
+  position        String?  // 职位
+  website         String?
+  address         String?  @db.Text
+  
+  // 客户分类和标签
+  type            CustomerType @default(LEAD)
+  source          String?  // 客户来源：website, referral, social, etc.
+  tags            String[] // 客户标签
+  
+  // 客户价值
+  totalOrders     Int      @default(0)
+  totalValue      Decimal? @db.Decimal(10, 2)
+  lastOrderDate   DateTime?
+  
+  // 状态和优先级
+  status          CustomerStatus @default(ACTIVE)
+  priority        CustomerPriority @default(NORMAL)
+  
+  // 分配的销售代表
+  assignedTo      String?  // User ID
+  assignedUser    User?    @relation(fields: [assignedTo], references: [id])
+  
+  // Stripe集成
+  stripeCustomerId String? @unique
+  
+  // 备注和描述
+  notes           String?  @db.Text
+  description     String?  @db.Text
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  contacts        Contact[]
+  quotes          Quote[]
+  interactions    CustomerInteraction[]
+  payments        Payment[]
+  supportSessions SupportSession[]
+
+  @@map("customers")
+}
+
+// 报价单管理
+model Quote {
+  id              String   @id @default(cuid())
+  quoteNumber     String   @unique // QT-2025-001
+  
+  // 客户信息
+  customer        Customer @relation(fields: [customerId], references: [id])
+  customerId      String
+  
+  // 报价详情
+  title           String
+  description     String?  @db.Text
+  items           Json     // 报价项目列表
+  subtotal        Decimal  @db.Decimal(10, 2)
+  taxRate         Decimal? @db.Decimal(5, 2)
+  taxAmount       Decimal? @db.Decimal(10, 2)
+  total           Decimal  @db.Decimal(10, 2)
+  currency        String   @default("USD")
+  
+  // 有效期和条款
+  validUntil      DateTime
+  terms           String?  @db.Text
+  notes           String?  @db.Text
+  
+  // 状态管理
+  status          QuoteStatus @default(DRAFT)
+  
+  // 创建者和审批
+  createdBy       String   // User ID
+  creator         User     @relation(fields: [createdBy], references: [id])
+  approvedBy      String?  // User ID
+  approver        User?    @relation("QuoteApprover", fields: [approvedBy], references: [id])
+  approvedAt      DateTime?
+  
+  // 发送和查看记录
+  sentAt          DateTime?
+  viewedAt        DateTime?
+  viewCount       Int      @default(0)
+  
+  // 支付相关
+  paymentIntentId String?  // Stripe Payment Intent ID
+  paidAt          DateTime?
+  amountPaid      Decimal? @db.Decimal(10, 2)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  payments        Payment[]
+
+  @@map("quotes")
+}
+
+// 客户互动记录
+model CustomerInteraction {
+  id          String   @id @default(cuid())
+  
+  // 关联客户
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String
+  
+  // 互动类型和内容
+  type        InteractionType
+  subject     String
+  content     String   @db.Text
+  
+  // 互动方式
+  channel     InteractionChannel @default(EMAIL)
+  
+  // 状态和优先级
+  status      InteractionStatus @default(COMPLETED)
+  priority    InteractionPriority @default(NORMAL)
+  
+  // 计划和完成时间
+  scheduledAt DateTime?
+  completedAt DateTime?
+  
+  // 创建者
+  createdBy   String   // User ID
+  creator     User     @relation(fields: [createdBy], references: [id])
+  
+  // 附件和相关记录
+  attachments String[] // 文件路径
+  relatedQuoteId String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("customer_interactions")
+}
+
+// 支付记录
+model Payment {
+  id                    String   @id @default(cuid())
+  
+  // 关联报价和客户
+  quote                 Quote    @relation(fields: [quoteId], references: [id])
+  quoteId               String
+  customer              Customer @relation(fields: [customerId], references: [id])
+  customerId            String
+  
+  // 支付信息
+  amount                Decimal  @db.Decimal(10, 2)
+  currency              String   @default("USD")
+  status                PaymentStatus
+  paymentMethod         PaymentMethod
+  
+  // Stripe集成
+  stripePaymentIntentId String?  @unique
+  stripeChargeId        String?
+  stripeInvoiceId       String?
+  
+  // 支付时间
+  paidAt                DateTime?
+  refundedAt            DateTime?
+  refundAmount          Decimal? @db.Decimal(10, 2)
+  
+  // 失败原因
+  failureReason         String?
+  
+  // 备注
+  notes                 String?  @db.Text
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("payments")
+}
+
+// Enums
+enum Role {
+  ADMIN          // 管理员：所有权限
+  EDITOR         // 编辑：内容管理权限
+  USER           // 普通用户：前端用户
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum ContactStatus {
+  PENDING
+  REVIEWED
+  REPLIED
+  CLOSED
+}
+
+// CRM相关枚举
+enum CustomerType {
+  LEAD           // 潜在客户
+  PROSPECT       // 意向客户
+  CUSTOMER       // 正式客户
+  PARTNER        // 合作伙伴
+}
+
+enum CustomerStatus {
+  ACTIVE         // 活跃
+  INACTIVE       // 不活跃
+  BLOCKED        // 已屏蔽
+  ARCHIVED       // 已归档
+}
+
+enum CustomerPriority {
+  LOW            // 低优先级
+  NORMAL         // 普通
+  HIGH           // 高优先级
+  URGENT         // 紧急
+}
+
+enum QuoteStatus {
+  DRAFT          // 草稿
+  PENDING        // 待审核
+  APPROVED       // 已审核
+  SENT           // 已发送
+  VIEWED         // 已查看
+  ACCEPTED       // 已接受
+  REJECTED       // 已拒绝
+  EXPIRED        // 已过期
+  CANCELLED      // 已取消
+  PAYMENT_PENDING // 支付处理中
+  PAID           // 已支付
+  PAYMENT_FAILED // 支付失败
+}
+
+enum InteractionType {
+  CALL           // 电话
+  EMAIL          // 邮件
+  MEETING        // 会议
+  NOTE           // 备注
+  TASK           // 任务
+  FOLLOW_UP      // 跟进
+  DEMO           // 演示
+  PROPOSAL       // 提案
+}
+
+enum InteractionChannel {
+  PHONE          // 电话
+  EMAIL          // 邮件
+  WEBSITE        // 网站
+  SOCIAL_MEDIA   // 社交媒体
+  IN_PERSON      // 面对面
+  VIDEO_CALL     // 视频通话
+  CHAT           // 在线聊天
+}
+
+enum InteractionStatus {
+  SCHEDULED      // 已安排
+  IN_PROGRESS    // 进行中
+  COMPLETED      // 已完成
+  CANCELLED      // 已取消
+  POSTPONED      // 已推迟
+}
+
+enum InteractionPriority {
+  LOW            // 低优先级
+  NORMAL         // 普通
+  HIGH           // 高优先级
+  URGENT         // 紧急
+}
+
+// 支付相关枚举
+enum PaymentStatus {
+  PENDING        // 待支付
+  PROCESSING     // 处理中
+  COMPLETED      // 已完成
+  FAILED         // 失败
+  CANCELLED      // 已取消
+  REFUNDED       // 已退款
+  PARTIALLY_REFUNDED // 部分退款
+}
+
+enum PaymentMethod {
+  STRIPE         // Stripe支付
+  WIRE_TRANSFER  // 电汇
+  PAYPAL         // PayPal
+  BANK_TRANSFER  // 银行转账
+  CHECK          // 支票
+  CASH           // 现金
+  OTHER          // 其他
+}
+
+model SiteConfig {
+  id              String   @id @default(cuid())
+  // 网站基本信息
+  siteName        String   @default("B2B Business Platform")
+  siteDescription String?  @default("Professional B2B Business Solutions")
+  logo            String?  // Logo图片URL
+  favicon         String?  // 网站图标URL
+  
+  // 首页横幅配置
+  heroTitle       String   @default("Welcome to B2B Business Platform")
+  heroSubtitle    String?  @default("Discover our comprehensive range of high-quality products")
+  heroImage       String?  // 横幅背景图片URL
+  heroButtonText  String   @default("Explore Products")
+  heroButtonLink  String   @default("/product")
+  
+  // 导航栏配置
+  navigationItems Json     @default("[{\"name\":\"Home\",\"href\":\"/\"},{\"name\":\"Products\",\"href\":\"/product\"},{\"name\":\"Blog\",\"href\":\"/blog\"},{\"name\":\"About\",\"href\":\"/about\"},{\"name\":\"Contact\",\"href\":\"/contact\"}]")
+  
+  // 联系信息
+  companyName     String?  @default("B2B Business Co.")
+  companyAddress  String?  @default("123 Business Street, City, Country")
+  companyPhone    String?  @default("+1 (555) 123-4567")
+  companyEmail    String?  @default("info@b2bbusiness.com")
+  
+  // 社交媒体链接
+  socialLinks     Json?    @default("{\"facebook\":\"\",\"twitter\":\"\",\"linkedin\":\"\",\"instagram\":\"\"}")
+  
+  // 页脚配置
+  footerText      String?  @default("© 2025 B2B Business Platform. All rights reserved.")
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("site_configs")
+}
+
+// 系统配置模型
+model SystemConfig {
+  id              String   @id @default(cuid())
+  
+  // 邮件配置
+  emailHost       String?  @default("smtp.exmail.qq.com")
+  emailPort       Int?     @default(465)
+  emailUser       String?
+  emailPassword   String?  // 加密存储
+  emailFrom       String?
+  emailSecure     Boolean  @default(true)
+  emailEnabled    Boolean  @default(false)
+  
+  // SEO配置
+  seoTitle        String?  @default("B2B Business Platform")
+  seoDescription  String?  @default("Professional B2B Business Solutions")
+  seoKeywords     String?  @default("B2B, business, products, international trade")
+  googleAnalytics String?  // GA tracking ID
+  googleTagManager String? // GTM container ID
+  sitemap         Boolean  @default(true)
+  robotsTxt       String?  @db.Text
+  
+  // 安全配置
+  maintenanceMode Boolean  @default(false)
+  maintenanceMessage String? @default("Site is under maintenance. Please check back later.")
+  passwordMinLength Int    @default(8)
+  passwordRequireSpecial Boolean @default(true)
+  loginAttempts   Int      @default(5)
+  lockoutDuration Int      @default(30) // minutes
+  sessionTimeout  Int      @default(1440) // minutes (24 hours)
+  
+  // 系统设置
+  timezone        String   @default("UTC")
+  dateFormat      String   @default("YYYY-MM-DD")
+  timeFormat      String   @default("HH:mm:ss")
+  currency        String   @default("USD")
+  language        String   @default("en")
+  
+  // 文件上传配置
+  maxFileSize     Int      @default(10485760) // 10MB in bytes
+  allowedFileTypes String  @default("jpg,jpeg,png,gif,pdf,doc,docx")
+  uploadPath      String   @default("/uploads")
+  
+  // 备份配置
+  autoBackup      Boolean  @default(false)
+  backupFrequency String   @default("daily") // daily, weekly, monthly
+  backupRetention Int      @default(30) // days
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("system_configs")
+}
+
+// 邮件模板
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String   @unique // contact_form, quote_request, newsletter, etc.
+  subject     String
+  htmlContent String   @db.Text
+  textContent String?  @db.Text
+  variables   Json?    // Available template variables
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("email_templates")
+}
+
+model CustomPage {
+  id          String   @id @default(cuid())
+  title       String   // 页面标题
+  slug        String   @unique // URL路径，如 "about-us"
+  content     String   @db.Text // 页面内容 (HTML/Markdown)
+  metaTitle   String?  // SEO标题
+  metaDescription String? // SEO描述
+  published   Boolean  @default(true)
+  showInNav   Boolean  @default(true) // 是否在导航中显示
+  sortOrder   Int      @default(0) // 排序
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("custom_pages")
+}
+
+// Newsletter subscription model
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  active      Boolean  @default(true)
+  confirmed   Boolean  @default(false)
+  confirmToken String? @unique
+  unsubscribeToken String? @unique
+  source      String?  // 订阅来源：blog, footer, popup等
+  tags        String[] // 订阅标签
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("newsletter_subscribers")
+}
+
+// Social Media Accounts model
+model SocialMedia {
+  id          String   @id @default(cuid())
+  platform    String   // 平台名称：facebook, twitter, instagram, linkedin, youtube, tiktok等
+  name        String   // 显示名称
+  url         String   // 社媒链接
+  icon        String?  // 图标URL或图标名称
+  description String?  // 描述
+  active      Boolean  @default(true)
+  showInHeader Boolean @default(false) // 是否在头部显示
+  showInFooter Boolean @default(true)  // 是否在底部显示
+  sortOrder   Int      @default(0) // 排序
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([platform])
+  @@map("social_media")
+}
+
+// 客服会话模型
+model SupportSession {
+  id            String   @id @default(cuid())
+  sessionId     String   @unique // 会话唯一标识
+  
+  // 访客信息
+  visitorId     String?  // 访客ID（匿名用户）
+  visitorName   String?  // 访客姓名
+  visitorEmail  String?  // 访客邮箱
+  visitorPhone  String?  // 访客电话
+  
+  // 用户信息（已登录用户）
+  userId        String?  // 关联用户ID
+  user          User?    @relation(fields: [userId], references: [id])
+  
+  // 客户信息（已存在客户）
+  customerId    String?  // 关联客户ID
+  customer      Customer? @relation(fields: [customerId], references: [id])
+  
+  // 会话状态
+  status        SupportSessionStatus @default(WAITING)
+  priority      SupportPriority @default(NORMAL)
+  
+  // 分配信息
+  assignedTo    String?  // 分配给的客服代表
+  assignedUser  User?    @relation("AssignedSessions", fields: [assignedTo], references: [id])
+  assignedAt    DateTime?
+  
+  // 会话信息
+  subject       String?  // 会话主题
+  department    String?  // 部门
+  source        String   @default("website") // 来源：website, mobile, email等
+  
+  // 时间记录
+  startedAt     DateTime @default(now())
+  endedAt       DateTime?
+  lastActivity  DateTime @default(now())
+  
+  // 满意度评分
+  rating        Int?     // 1-5星评分
+  feedback      String?  @db.Text // 反馈内容
+  
+  // 会话元数据
+  metadata      Json?    // 浏览器信息、页面来源等
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  messages      SupportMessage[]
+  transfers     SupportTransfer[]
+
+  @@map("support_sessions")
+}
+
+// 客服消息模型
+model SupportMessage {
+  id          String   @id @default(cuid())
+  
+  // 关联会话
+  sessionId   String
+  session     SupportSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  // 消息内容
+  content     String   @db.Text
+  messageType SupportMessageType @default(TEXT)
+  
+  // 发送者信息
+  senderType  SupportSenderType // USER, AGENT, SYSTEM
+  senderId    String?  // 用户ID或客服ID
+  senderName  String?  // 发送者姓名
+  
+  // 消息状态
+  status      SupportMessageStatus @default(SENT)
+  readAt      DateTime?
+  
+  // 附件信息
+  attachments Json?    // 附件列表 [{type, url, name, size}]
+  
+  // 消息元数据
+  metadata    Json?    // 额外信息，如订单卡片数据
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("support_messages")
+}
+
+// 客服转接记录
+model SupportTransfer {
+  id            String   @id @default(cuid())
+  
+  // 关联会话
+  sessionId     String
+  session       SupportSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  // 转接信息
+  fromUserId    String?  // 转出客服
+  fromUser      User?    @relation("TransferFrom", fields: [fromUserId], references: [id])
+  toUserId      String?  // 转入客服
+  toUser        User?    @relation("TransferTo", fields: [toUserId], references: [id])
+  
+  // 转接原因和备注
+  reason        String?  @db.Text
+  notes         String?  @db.Text
+  
+  // 转接状态
+  status        SupportTransferStatus @default(PENDING)
+  acceptedAt    DateTime?
+  rejectedAt    DateTime?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("support_transfers")
+}
+
+// 客服知识库
+model SupportKnowledge {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  category    String
+  tags        String[]
+  
+  // 状态和权限
+  published   Boolean  @default(false)
+  internal    Boolean  @default(false) // 是否仅内部可见
+  
+  // 使用统计
+  viewCount   Int      @default(0)
+  useCount    Int      @default(0) // 被客服使用次数
+  
+  // 创建者
+  createdBy   String
+  creator     User     @relation(fields: [createdBy], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("support_knowledge")
+}
+
+// 客服快捷回复
+model SupportQuickReply {
+  id          String   @id @default(cuid())
+  title       String   // 快捷回复标题
+  content     String   @db.Text // 回复内容
+  category    String?  // 分类
+  tags        String[] // 标签
+  
+  // 使用权限
+  isGlobal    Boolean  @default(false) // 是否全局可用
+  createdBy   String   // 创建者
+  creator     User     @relation(fields: [createdBy], references: [id])
+  
+  // 使用统计
+  useCount    Int      @default(0)
+  
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("support_quick_replies")
+}
+
+// 客服工作时间配置
+model SupportWorkingHours {
+  id          String   @id @default(cuid())
+  dayOfWeek   Int      // 0-6 (Sunday-Saturday)
+  startTime   String   // HH:mm format
+  endTime     String   // HH:mm format
+  timezone    String   @default("UTC")
+  active      Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([dayOfWeek])
+  @@map("support_working_hours")
+}
+
+// 客服系统配置
+model SupportConfig {
+  id                    String   @id @default(cuid())
+  
+  // 基本配置
+  enabled               Boolean  @default(true)
+  welcomeMessage        String   @default("Hello! How can we help you today?")
+  offlineMessage        String   @default("We're currently offline. Please leave a message and we'll get back to you.")
+  
+  // 自动分配配置
+  autoAssignment        Boolean  @default(true)
+  maxSessionsPerAgent   Int      @default(5)
+  
+  // 通知配置
+  emailNotifications    Boolean  @default(true)
+  soundNotifications    Boolean  @default(true)
+  
+  // 文件上传配置
+  allowFileUpload       Boolean  @default(true)
+  maxFileSize           Int      @default(10485760) // 10MB
+  allowedFileTypes      String[] @default(["jpg", "jpeg", "png", "gif", "pdf", "doc", "docx"])
+  
+  // 评分配置
+  enableRating          Boolean  @default(true)
+  ratingRequired        Boolean  @default(false)
+  
+  // 会话超时配置
+  sessionTimeout        Int      @default(1800) // 30 minutes in seconds
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("support_configs")
+}
+
+// 客服相关枚举
+enum SupportSessionStatus {
+  WAITING     // 等待中
+  ACTIVE      // 进行中
+  TRANSFERRED // 已转接
+  CLOSED      // 已关闭
+  ABANDONED   // 已放弃
+}
+
+enum SupportPriority {
+  LOW         // 低优先级
+  NORMAL      // 普通
+  HIGH        // 高优先级
+  URGENT      // 紧急
+}
+
+enum SupportMessageType {
+  TEXT        // 文本消息
+  IMAGE       // 图片
+  FILE        // 文件
+  ORDER_CARD  // 订单卡片
+  PRODUCT_CARD // 产品卡片
+  SYSTEM      // 系统消息
+}
+
+enum SupportSenderType {
+  USER        // 用户/访客
+  AGENT       // 客服代表
+  SYSTEM      // 系统
+}
+
+enum SupportMessageStatus {
+  SENT        // 已发送
+  DELIVERED   // 已送达
+  READ        // 已读
+  FAILED      // 发送失败
+}
+
+enum SupportTransferStatus {
+  PENDING     // 待处理
+  ACCEPTED    // 已接受
+  REJECTED    // 已拒绝
+  CANCELLED   // 已取消
+}
+
+// Payment Settings model
+model PaymentSettings {
+  id                    String   @id @default("default")
+  stripeEnabled         Boolean  @default(true)
+  stripeLinkEnabled     Boolean  @default(true)
+  stripePublishableKey  String?
+  stripeSecretKey       String?
+  stripeWebhookSecret   String?
+  linkPersistentToken   Boolean  @default(true)
+  linkSaveCards         Boolean  @default(true)
+  defaultCurrency       String   @default("USD")
+  minimumAmount         Int      @default(1)
+  maximumAmount         Int      @default(999999)
+  allowedCountries      String[] @default(["US", "CA", "GB", "AU"])
+  requireBillingAddress Boolean  @default(true)
+  collectShippingAddress Boolean @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("payment_settings")
+}

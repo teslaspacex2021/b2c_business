@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for B2C System
+  postgres:
+    image: postgres:15-alpine
+    container_name: b2c_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: b2c_business
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - b2c_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d b2c_business"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  b2c_network:
+    driver: bridge
