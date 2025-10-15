@@ -3,288 +3,40 @@
 - Before starting the server, kill all running processes, then start the server.
 - Use pnpm to install dependencies, and use pnpm run dev to start the server.
 - After completing each feature, use mcp chrome-devtools to test the functionality and page integrity.
+- use docker-compose up -d to start the database.
+- Refer to the latest documentation for development. Use mcp context7 to get the latest documentation.
 
-# B2B Business Platform - Cursor Rules
+# B2C Business Platform - Essential Rules
 
-You are an expert full-stack developer working on a B2B Business Platform built with Next.js 15, TypeScript, Prisma, Stripe, and Tailwind CSS.
-
-## 🏗️ Project Architecture
-
-### Tech Stack
-- **Framework**: Next.js 15.1.0 with Turbopack
-- **Language**: TypeScript 5 (strict mode)
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: NextAuth.js v4
-- **Payment**: Stripe integration with Link support
-- **Styling**: Tailwind CSS + shadcn/ui components
-- **State Management**: React hooks + server components
-- **Email**: Nodemailer
-- **Rich Text**: TipTap editor
-- **Charts**: Recharts
-- **Icons**: Lucide React
+## Tech Stack
+- **Framework**: Next.js 15 + TypeScript 5 (strict mode)
+- **Database**: PostgreSQL + Prisma ORM
+- **Auth**: NextAuth.js v4 (ADMIN/USER roles)
+- **Payment**: Stripe integration
+- **UI**: Tailwind CSS + shadcn/ui
 - **Forms**: React Hook Form + Zod validation
-- **Notifications**: Sonner
 
-### Project Structure
+## Key Guidelines
+- Use server components by default, client components only when needed ('use client')
+- Use absolute imports with @ alias (@/components, @/lib, etc.)
+- Implement proper error handling with try-catch blocks
+- Use proper HTTP status codes and consistent API response format
+- Follow Next.js 15 App Router conventions
+- Validate all inputs with Zod schemas
+
+## File Structure
 ```
 src/
-├── app/                    # Next.js 15 App Router
-│   ├── (admin)/           # Admin route group
-│   ├── admin/             # Admin dashboard
-│   ├── api/               # API routes
-│   ├── blog/              # Blog pages
-│   ├── product/           # Product pages
-│   └── payment/           # Payment pages
-├── components/            # React components
-│   ├── admin/             # Admin-specific components
-│   ├── forms/             # Form components
-│   ├── layout/            # Layout components
-│   └── ui/                # shadcn/ui components
-├── hooks/                 # Custom React hooks
-├── lib/                   # Utility libraries
-└── types/                 # TypeScript type definitions
+├── app/          # Next.js App Router (pages & API routes)
+├── components/   # React components (ui/, admin/, forms/)
+├── hooks/        # Custom React hooks
+├── lib/          # Utilities (auth, db, stripe, etc.)
+└── types/        # TypeScript definitions
 ```
 
-## 🎯 Development Guidelines
+## Essential Patterns
 
-### Code Style & Standards
-- Use TypeScript strict mode with proper type definitions
-- Follow Next.js 15 App Router conventions
-- Use server components by default, client components only when needed ('use client')
-- Implement proper error boundaries and loading states
-- Use Prisma for all database operations
-- Follow RESTful API design patterns
-- Use absolute imports with @ alias (@/components, @/lib, etc.)
-
-### Component Architecture
-- Use shadcn/ui components as base building blocks
-- Create reusable components in `/components/ui/`
-- Admin components go in `/components/admin/`
-- Use proper TypeScript interfaces for all props
-- Implement proper loading and error states
-- Use React.memo() for performance optimization when needed
-
-### Database & API
-- Use Prisma schema for all database models
-- Implement proper API error handling with try-catch blocks
-- Use proper HTTP status codes (200, 201, 400, 401, 403, 404, 500)
-- Validate all inputs with Zod schemas
-- Use server actions where appropriate
-- Handle database connection errors gracefully
-
-### Authentication & Security
-- Use NextAuth.js for authentication
-- Implement proper role-based access control (ADMIN, USER roles)
-- Validate user permissions on both client and server
-- Secure all admin routes with middleware
-- Use getServerSession for server-side auth checks
-
-### Payment Integration
-- Use Stripe for payment processing with test keys provided
-- Implement proper webhook handling at /api/webhooks/stripe
-- Handle payment errors gracefully with user-friendly messages
-- Store payment metadata properly in database
-- Use Stripe Link for faster checkout experiences
-
-## 🔧 Coding Conventions
-
-### File Naming
-- Use kebab-case for files and folders
-- Use PascalCase for React components
-- Use camelCase for functions and variables
-- API routes: `/api/[resource]/route.ts`
-- Pages: `/[route]/page.tsx`
-- Components: `ComponentName.tsx`
-
-### Import Organization
-```typescript
-// 1. React and Next.js imports
-import React from 'react';
-import { NextRequest, NextResponse } from 'next/server';
-import { notFound } from 'next/navigation';
-
-// 2. Third-party libraries
-import { prisma } from '@/lib/db';
-import { getServerSession } from 'next-auth';
-import { stripe } from '@/lib/stripe';
-
-// 3. Internal imports (components, hooks, utils)
-import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/hooks/useLanguage';
-import { authOptions } from '@/lib/auth';
-
-// 4. Type imports (last)
-import type { User, Product } from '@/types';
-import type { Metadata } from 'next';
-```
-
-### TypeScript Best Practices
-- Always define proper interfaces for props and data
-- Use generic types where appropriate
-- Avoid `any` type - use `unknown` or proper types
-- Use type guards for runtime type checking
-- Export types from `/types/index.ts`
-- Use `satisfies` operator for type checking objects
-
-### React Best Practices
-- Use functional components with hooks
-- Implement proper error boundaries
-- Use React.memo() for performance optimization
-- Handle loading states with Suspense and loading.tsx
-- Use proper key props in lists
-- Prefer server components over client components
-
-### API Development
-- Use proper HTTP methods (GET, POST, PUT, DELETE)
-- Implement request validation with Zod
-- Return consistent response formats: `{ success: boolean, data?: any, error?: string }`
-- Handle errors with proper status codes
-- Use middleware for authentication
-- Implement rate limiting where needed
-
-### Database Operations
-- Use Prisma Client for all database operations
-- Implement proper error handling with try-catch
-- Use transactions for complex operations
-- Optimize queries with proper includes/selects
-- Handle database connection errors
-- Use proper indexing for performance
-
-### Styling Guidelines
-- Use Tailwind CSS utility classes
-- Follow shadcn/ui design system
-- Use CSS variables for theming (hsl format)
-- Implement responsive design (mobile-first)
-- Use proper semantic HTML
-- Follow accessibility guidelines (ARIA labels, keyboard navigation)
-
-## 🚀 Performance & Optimization
-
-### Next.js Optimization
-- Use Server Components by default
-- Implement proper caching strategies
-- Optimize images with next/image
-- Use dynamic imports for code splitting
-- Implement proper SEO with metadata API
-- Use streaming with Suspense boundaries
-
-### Database Optimization
-- Use proper database indexes
-- Implement query optimization
-- Use connection pooling
-- Handle database migrations properly
-- Use select/include to limit data fetching
-
-### Frontend Optimization
-- Minimize client-side JavaScript
-- Use proper loading states
-- Implement infinite scrolling where needed
-- Optimize bundle size
-- Use React.lazy for code splitting
-
-## 🔒 Security Best Practices
-
-### Authentication
-- Validate user sessions on every request
-- Implement proper CSRF protection
-- Use secure session configuration
-- Handle logout properly
-- Check user roles and permissions
-
-### Data Validation
-- Validate all inputs on both client and server
-- Use Zod schemas for validation
-- Sanitize user inputs
-- Implement rate limiting
-- Use environment variables for secrets
-
-### API Security
-- Use proper CORS configuration
-- Implement request validation
-- Handle sensitive data properly
-- Use HTTPS in production
-- Validate file uploads properly
-
-## 🧪 Testing & Quality
-
-### Code Quality
-- Write self-documenting code
-- Add comments for complex logic
-- Use proper error messages
-- Implement proper logging
-- Follow DRY principles
-
-### Error Handling
-- Use try-catch blocks appropriately
-- Implement proper error boundaries
-- Log errors for debugging
-- Show user-friendly error messages
-- Handle async errors properly
-
-## 📱 Responsive Design
-
-### Breakpoints (Tailwind CSS)
-- sm: 640px and up
-- md: 768px and up
-- lg: 1024px and up
-- xl: 1280px and up
-- 2xl: 1536px and up
-
-### Component Responsiveness
-- Use Tailwind responsive prefixes (sm:, md:, lg:, xl:)
-- Test on multiple screen sizes
-- Implement proper touch interactions
-- Ensure accessibility compliance
-- Use proper viewport meta tag
-
-## 🎨 UI/UX Guidelines
-
-### Design System
-- Use shadcn/ui components consistently
-- Follow established color scheme (CSS variables)
-- Implement proper spacing (Tailwind spacing scale)
-- Use consistent typography
-- Follow design tokens
-
-### User Experience
-- Implement proper loading states
-- Show clear error messages
-- Use progressive enhancement
-- Ensure keyboard navigation
-- Provide feedback for user actions
-
-## 📦 Dependencies Management
-
-### Adding New Dependencies
-- Prefer well-maintained packages
-- Check bundle size impact
-- Ensure TypeScript support
-- Update package.json properly
-- Consider security implications
-
-### Version Management
-- Keep dependencies updated
-- Test after updates
-- Use exact versions for critical packages
-- Document breaking changes
-
-## 🔄 State Management
-
-### Client State
-- Use React hooks (useState, useEffect, etc.)
-- Implement custom hooks for reusable logic
-- Use React Context sparingly
-- Consider Zustand for complex state
-
-### Server State
-- Use Server Components for data fetching
-- Implement proper caching
-- Handle loading and error states
-- Use React Query for client-side caching if needed
-
-## 📋 Specific Implementation Patterns
-
-### API Route Pattern
+### API Route
 ```typescript
 export async function GET(request: NextRequest) {
   try {
@@ -292,209 +44,51 @@ export async function GET(request: NextRequest) {
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    // Process request
     const data = await prisma.model.findMany();
-    
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    console.error('API Error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 ```
 
-### Server Component Pattern
+### Server Component
 ```typescript
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const { id } = await params;
   const data = await fetchData(id);
-  
-  if (!data) {
-    notFound();
-  }
-  
-  return (
-    <div>
-      {/* Component JSX */}
-    </div>
-  );
+  if (!data) notFound();
+  return <div>{/* JSX */}</div>;
 }
 ```
 
-### Client Component Pattern
+### Form Component
 ```typescript
 'use client';
-
-interface ComponentProps {
-  // Define props with proper types
-}
-
-export default function Component({ ...props }: ComponentProps) {
-  const [state, setState] = useState();
-  
-  useEffect(() => {
-    // Side effects
-  }, []);
-  
-  return (
-    // JSX
-  );
-}
-```
-
-### Database Query Pattern
-```typescript
-const data = await prisma.model.findMany({
-  where: { 
-    published: true,
-    // conditions 
-  },
-  include: { 
-    // relations 
-  },
-  orderBy: { 
-    createdAt: 'desc' 
-  },
-  take: 10,
-});
-```
-
-### Form Handling Pattern
-```typescript
-'use client';
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
-const schema = z.object({
-  // Define schema
-});
-
+const schema = z.object({ /* fields */ });
 type FormData = z.infer<typeof schema>;
 
 export default function FormComponent() {
-  const form = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
-  
-  const onSubmit = async (data: FormData) => {
-    // Handle form submission
-  };
-  
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      {/* Form fields */}
-    </form>
-  );
+  const form = useForm<FormData>({ resolver: zodResolver(schema) });
+  const onSubmit = async (data: FormData) => { /* handle */ };
+  return <form onSubmit={form.handleSubmit(onSubmit)}>{/* fields */}</form>;
 }
 ```
 
-## 🎯 Business Context
+## Security & Performance
+- Use getServerSession for auth checks
+- Validate user permissions on client and server
+- Use proper TypeScript types (avoid `any`)
+- Implement responsive design (mobile-first)
+- Use React.memo() for optimization when needed
+- Handle loading/error states properly
 
-### B2B Platform Features
-- International trade focus
-- Multi-language support
-- Enterprise-level requirements
-- Payment processing for B2B transactions
-- Customer support system
-- Product catalog management
-- Blog/content management
-- Admin dashboard with analytics
-
-### Key Considerations
-- Handle large product catalogs
-- Support multiple currencies
-- Implement proper SEO for international markets
-- Ensure data security for business transactions
-- Provide comprehensive admin tools
-- Support customer inquiries and quotes
-
-## 🚨 Common Patterns to Follow
-
-### Error Handling
-```typescript
-try {
-  const result = await riskyOperation();
-  return { success: true, data: result };
-} catch (error) {
-  console.error('Operation failed:', error);
-  return { success: false, error: 'Operation failed' };
-}
-```
-
-### Loading States
-```typescript
-export default function Component() {
-  const [loading, setLoading] = useState(false);
-  
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  
-  return <div>Content</div>;
-}
-```
-
-### Conditional Rendering
-```typescript
-{user ? (
-  <UserDashboard user={user} />
-) : (
-  <LoginForm />
-)}
-```
-
-## 🔍 Code Review Checklist
-
-Before submitting code, ensure:
-- [ ] TypeScript types are properly defined
-- [ ] Error handling is implemented
-- [ ] Loading states are handled
-- [ ] Responsive design is implemented
-- [ ] Accessibility guidelines are followed
-- [ ] Security best practices are applied
-- [ ] Performance is optimized
-- [ ] Code is properly documented
-- [ ] Tests are written (if applicable)
-- [ ] Dependencies are properly managed
-
-## 🎯 Focus Areas
-
-When working on this project, prioritize:
-1. **Type Safety**: Ensure all code is properly typed
-2. **Performance**: Optimize for speed and efficiency
-3. **Security**: Implement proper authentication and validation
-4. **User Experience**: Create intuitive and responsive interfaces
-5. **Maintainability**: Write clean, documented code
-6. **Business Logic**: Understand B2B requirements and international trade context
-
-Always consider the business context of B2B operations, international trade, and enterprise-level requirements when making implementation decisions.
-
-## 🛠️ Development Workflow
-
-### Git Workflow
-- Use meaningful commit messages
-- Create feature branches for new features
-- Use pull requests for code review
-- Keep commits atomic and focused
-
-### Testing Strategy
-- Test critical user flows
-- Validate API endpoints
-- Check responsive design
-- Verify accessibility compliance
-
-### Deployment Considerations
-- Use environment variables for configuration
-- Implement proper logging
-- Set up monitoring and alerts
-- Ensure database migrations are handled properly
-
-Remember: This is a production B2B platform handling real business transactions. Code quality, security, and reliability are paramount.
+## Business Context
+B2C platform for consumer products with multi-language support, payment processing, product catalog, admin dashboard, and customer support system.
