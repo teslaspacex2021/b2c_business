@@ -30,7 +30,7 @@ import {
   Archive
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/use-toast';
 
 interface DigitalFile {
   id: string;
@@ -106,7 +106,11 @@ export default function DigitalProductsContent() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
-      toast.error('Failed to load data');
+      toast({
+        title: "Error",
+        description: "Failed to load data",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -131,7 +135,11 @@ export default function DigitalProductsContent() {
     e.preventDefault();
     
     if (!uploadForm.file || !uploadForm.productId) {
-      toast.error('Please select a file and product');
+      toast({
+        title: "Error",
+        description: "Please select a file and product",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -162,11 +170,19 @@ export default function DigitalProductsContent() {
         loadData();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Upload failed');
+        toast({
+          title: "Upload Failed",
+          description: errorData.error || 'Upload failed',
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Upload error:', error);
-      toast.error('Upload failed');
+      toast({
+        title: "Error",
+        description: "Upload failed",
+        variant: "destructive"
+      });
     } finally {
       setIsUploading(false);
     }

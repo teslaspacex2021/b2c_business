@@ -26,7 +26,7 @@ import {
   Package
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/use-toast';
 
 interface ProductDownload {
   id: string;
@@ -117,7 +117,11 @@ export default function DownloadsManagementContent() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
-      toast.error('Failed to load data');
+      toast({
+        title: "Error",
+        description: "Failed to load data",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -142,7 +146,11 @@ export default function DownloadsManagementContent() {
     e.preventDefault();
     
     if (!createForm.productId || !createForm.customerId) {
-      toast.error('Please select product and customer');
+      toast({
+        title: "Error",
+        description: "Please select product and customer",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -156,7 +164,10 @@ export default function DownloadsManagementContent() {
       });
 
       if (response.ok) {
-        toast.success('Download access created successfully');
+        toast({
+          title: "Success",
+          description: "Download access created successfully"
+        });
         setIsCreateDialogOpen(false);
         setCreateForm({
           productId: '',
@@ -167,11 +178,19 @@ export default function DownloadsManagementContent() {
         loadData();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Creation failed');
+        toast({
+          title: "Error",
+          description: errorData.error || 'Creation failed',
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Create error:', error);
-      toast.error('Creation failed');
+      toast({
+        title: "Error",
+        description: "Creation failed",
+        variant: "destructive"
+      });
     }
   };
 
@@ -191,17 +210,28 @@ export default function DownloadsManagementContent() {
       });
 
       if (response.ok) {
-        toast.success('Download updated successfully');
+        toast({
+          title: "Success",
+          description: "Download updated successfully"
+        });
         setIsEditDialogOpen(false);
         setEditingDownload(null);
         loadData();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Update failed');
+        toast({
+          title: "Error",
+          description: errorData.error || 'Update failed',
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Update error:', error);
-      toast.error('Update failed');
+      toast({
+        title: "Error",
+        description: "Update failed",
+        variant: "destructive"
+      });
     }
   };
 
@@ -217,15 +247,26 @@ export default function DownloadsManagementContent() {
       });
 
       if (response.ok) {
-        toast.success('Download access revoked successfully');
+        toast({
+          title: "Success",
+          description: "Download access revoked successfully"
+        });
         loadData();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Delete failed');
+        toast({
+          title: "Error",
+          description: errorData.error || 'Delete failed',
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Delete error:', error);
-      toast.error('Delete failed');
+      toast({
+        title: "Error",
+        description: "Delete failed",
+        variant: "destructive"
+      });
     }
   };
 
