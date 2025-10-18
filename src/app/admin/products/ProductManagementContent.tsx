@@ -41,6 +41,7 @@ export default function ProductManagementContent() {
   const [stats, setStats] = useState<any>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load data
   const loadData = async () => {

@@ -63,6 +63,10 @@ export async function GET(request: NextRequest) {
         orders: true,
         rating: true,
         reviewCount: true,
+        productType: true,
+        isDigital: true,
+        downloadLimit: true,
+        downloadExpiry: true,
         createdAt: true,
         updatedAt: true,
       }
@@ -111,7 +115,11 @@ export async function POST(request: NextRequest) {
       featured,
       seoTitle,
       seoDescription,
-      metaKeywords
+      metaKeywords,
+      productType,
+      isDigital,
+      downloadLimit,
+      downloadExpiry
     } = body;
 
     if (!title || !category) {
@@ -149,6 +157,10 @@ export async function POST(request: NextRequest) {
         seoTitle: seoTitle || null,
         seoDescription: seoDescription || null,
         metaKeywords: metaKeywords || [],
+        productType: productType || 'PHYSICAL',
+        isDigital: isDigital || false,
+        downloadLimit: downloadLimit ? parseInt(downloadLimit.toString()) : null,
+        downloadExpiry: downloadExpiry ? parseInt(downloadExpiry.toString()) : null,
       }
     });
 

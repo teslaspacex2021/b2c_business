@@ -166,7 +166,18 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, description, images, category, specifications, published } = body;
+    const { 
+      title, 
+      description, 
+      images, 
+      category, 
+      specifications, 
+      published,
+      productType,
+      isDigital,
+      downloadLimit,
+      downloadExpiry
+    } = body;
 
     // Validate required fields
     if (!title || !description || !category) {
@@ -184,6 +195,10 @@ export async function POST(request: NextRequest) {
         category,
         specifications: specifications || {},
         published: published || false,
+        productType: productType || 'PHYSICAL',
+        isDigital: isDigital || false,
+        downloadLimit: downloadLimit ? parseInt(downloadLimit) : null,
+        downloadExpiry: downloadExpiry ? parseInt(downloadExpiry) : null,
       },
     });
 
