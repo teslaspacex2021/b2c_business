@@ -30,7 +30,9 @@ import {
   BarChart3,
   Mail,
   Image,
-  MessageCircle
+  MessageCircle,
+  Download,
+  CreditCard
 } from 'lucide-react';
 
 
@@ -122,6 +124,11 @@ function AdminLayoutContent({
           icon: Folder,
         },
         {
+          title: 'Digital Products',
+          href: '/admin/digital-products',
+          icon: Download,
+        },
+        {
           title: 'Blog Posts',
           href: '/admin/blogs',
           icon: FileText,
@@ -161,6 +168,11 @@ function AdminLayoutContent({
           href: '/admin/support',
           icon: MessageCircle,
         },
+        {
+          title: 'Downloads',
+          href: '/admin/downloads',
+          icon: Download,
+        },
       ],
     },
     {
@@ -174,7 +186,7 @@ function AdminLayoutContent({
         {
           title: 'Payment Setup',
           href: '/admin/payments/settings',
-          icon: Settings,
+          icon: CreditCard,
         },
         {
           title: 'Social Media',

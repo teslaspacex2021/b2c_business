@@ -32,6 +32,7 @@ export default function ProductForm({ onSubmit, onCancel, initialData, isLoading
     lowStockAlert: initialData?.lowStockAlert?.toString() || '10',
     weight: initialData?.weight?.toString() || '',
     category: initialData?.category || '',
+    categoryId: initialData?.categoryId || '',
     subcategory: initialData?.subcategory || '',
     brand: initialData?.brand || '',
     tags: initialData?.tags || [],
@@ -41,6 +42,12 @@ export default function ProductForm({ onSubmit, onCancel, initialData, isLoading
     seoTitle: initialData?.seoTitle || '',
     seoDescription: initialData?.seoDescription || '',
     metaKeywords: initialData?.metaKeywords || [],
+    images: initialData?.images || [],
+    // Digital product fields
+    productType: initialData?.productType || 'PHYSICAL',
+    isDigital: initialData?.isDigital || false,
+    downloadLimit: initialData?.downloadLimit?.toString() || '',
+    downloadExpiry: initialData?.downloadExpiry?.toString() || '',
   });
 
   const [newTag, setNewTag] = useState('');
@@ -200,8 +207,9 @@ export default function ProductForm({ onSubmit, onCancel, initialData, isLoading
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Tabs defaultValue="basic" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="basic">Basic Info</TabsTrigger>
+          <TabsTrigger value="digital">Digital</TabsTrigger>
           <TabsTrigger value="pricing">Pricing & Stock</TabsTrigger>
           <TabsTrigger value="details">Details</TabsTrigger>
           <TabsTrigger value="seo">SEO</TabsTrigger>
@@ -370,6 +378,90 @@ export default function ProductForm({ onSubmit, onCancel, initialData, isLoading
           </Card>
         </TabsContent>
 
+        <TabsContent value="digital" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Digital Product Settings</CardTitle>
+              <CardDescription>Configure digital product and download options</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="productType">Product Type</Label>
+                <Select
+                  value={formData.productType}
+                  onValueChange={(value) => {
+                    handleInputChange('productType', value);
+                    handleInputChange('isDigital', value === 'DIGITAL' || value === 'HYBRID');
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PHYSICAL">Physical Product</SelectItem>
+                    <SelectItem value="DIGITAL">Digital Product</SelectItem>
+                    <SelectItem value="HYBRID">Hybrid (Physical + Digital)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {formData.productType === 'PHYSICAL' && 'Traditional physical product with shipping'}
+                  {formData.productType === 'DIGITAL' && 'Downloadable digital product only'}
+                  {formData.productType === 'HYBRID' && 'Physical product with digital downloads included'}
+                </p>
+              </div>
+
+              {(formData.productType === 'DIGITAL' || formData.productType === 'HYBRID') && (
+                <>
+                  <div className="p-4 border rounded-lg bg-muted/50">
+                    <h4 className="font-medium mb-3">Download Settings</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="downloadLimit">Download Limit</Label>
+                        <Input
+                          id="downloadLimit"
+                          type="number"
+                          value={formData.downloadLimit}
+                          onChange={(e) => handleInputChange('downloadLimit', e.target.value)}
+                          placeholder="Unlimited"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Maximum downloads per purchase (leave empty for unlimited)
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="downloadExpiry">Download Expiry (Days)</Label>
+                        <Input
+                          id="downloadExpiry"
+                          type="number"
+                          value={formData.downloadExpiry}
+                          onChange={(e) => handleInputChange('downloadExpiry', e.target.value)}
+                          placeholder="Never expires"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Days until download access expires (leave empty for never)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 border rounded-lg bg-blue-50 dark:bg-blue-950/20">
+                    <div className="flex items-start space-x-2">
+                      <div className="w-4 h-4 rounded-full bg-blue-500 flex-shrink-0 mt-0.5"></div>
+                      <div>
+                        <h4 className="font-medium text-blue-900 dark:text-blue-100">Digital Files Management</h4>
+                        <p className="text-sm text-blue-700 dark:text-blue-200 mt-1">
+                          After creating this product, you can upload digital files in the Digital Products section.
+                          Files will be available for download after purchase.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="pricing" className="space-y-4">
           <Card>
             <CardHeader>
@@ -413,39 +505,49 @@ export default function ProductForm({ onSubmit, onCancel, initialData, isLoading
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="stock">Stock Quantity</Label>
-                  <Input
-                    id="stock"
-                    type="number"
-                    value={formData.stock}
-                    onChange={(e) => handleInputChange('stock', e.target.value)}
-                    placeholder="0"
-                  />
+              {formData.productType !== 'DIGITAL' && (
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="stock">Stock Quantity</Label>
+                    <Input
+                      id="stock"
+                      type="number"
+                      value={formData.stock}
+                      onChange={(e) => handleInputChange('stock', e.target.value)}
+                      placeholder="0"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="lowStockAlert">Low Stock Alert</Label>
+                    <Input
+                      id="lowStockAlert"
+                      type="number"
+                      value={formData.lowStockAlert}
+                      onChange={(e) => handleInputChange('lowStockAlert', e.target.value)}
+                      placeholder="10"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="weight">Weight (kg)</Label>
+                    <Input
+                      id="weight"
+                      type="number"
+                      step="0.001"
+                      value={formData.weight}
+                      onChange={(e) => handleInputChange('weight', e.target.value)}
+                      placeholder="0.000"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="lowStockAlert">Low Stock Alert</Label>
-                  <Input
-                    id="lowStockAlert"
-                    type="number"
-                    value={formData.lowStockAlert}
-                    onChange={(e) => handleInputChange('lowStockAlert', e.target.value)}
-                    placeholder="10"
-                  />
+              )}
+
+              {formData.productType === 'DIGITAL' && (
+                <div className="p-4 border rounded-lg bg-muted/50">
+                  <p className="text-sm text-muted-foreground">
+                    Digital products don't require stock management or shipping weight.
+                  </p>
                 </div>
-                <div>
-                  <Label htmlFor="weight">Weight (kg)</Label>
-                  <Input
-                    id="weight"
-                    type="number"
-                    step="0.001"
-                    value={formData.weight}
-                    onChange={(e) => handleInputChange('weight', e.target.value)}
-                    placeholder="0.000"
-                  />
-                </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

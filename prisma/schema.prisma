@@ -95,8 +95,19 @@ model Product {
   orders        Int               @default(0)
   rating        Decimal?          @db.Decimal(2, 1)
   reviewCount   Int               @default(0)
+  
+  // Digital product fields
+  productType   ProductType       @default(PHYSICAL)
+  isDigital     Boolean           @default(false)
+  downloadLimit Int?              // Max downloads per purchase (null = unlimited)
+  downloadExpiry Int?             // Days until download expires (null = never)
+  
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
+  
+  // Relations
+  digitalFiles  DigitalFile[]
+  downloads     ProductDownload[]
 
   @@map("products")
 }
@@ -204,6 +215,7 @@ model Customer {
   interactions    CustomerInteraction[]
   payments        Payment[]
   supportSessions SupportSession[]
+  downloads       ProductDownload[]
 
   @@map("customers")
 }
@@ -337,11 +349,85 @@ model Payment {
   @@map("payments")
 }
 
+// Digital file model for downloadable products
+model DigitalFile {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  fileName      String   // Original file name
+  displayName   String   // Display name for users
+  filePath      String   // Server file path
+  fileSize      Int      // File size in bytes
+  mimeType      String   // MIME type
+  fileHash      String   // File hash for integrity
+  
+  // File metadata
+  description   String?  @db.Text
+  version       String?  // File version
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("digital_files")
+}
+
+// Product download tracking
+model ProductDownload {
+  id            String   @id @default(cuid())
+  
+  // Product and file info
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id])
+  fileId        String?  // Specific file downloaded (null for product package)
+  
+  // User/Customer info
+  userId        String?  // Registered user
+  customerId    String?  // Customer from order
+  customer      Customer? @relation(fields: [customerId], references: [id])
+  
+  // Download tracking
+  downloadToken String   @unique // Secure download token
+  ipAddress     String?
+  userAgent     String?  @db.Text
+  
+  // Download limits and expiry
+  downloadCount Int      @default(0)
+  maxDownloads  Int?     // Inherited from product or custom
+  expiresAt     DateTime? // Download expiry
+  
+  // Status
+  status        DownloadStatus @default(ACTIVE)
+  
+  // Timestamps
+  firstDownloadAt DateTime?
+  lastDownloadAt  DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("product_downloads")
+}
+
 // Enums
 enum Role {
   ADMIN          // 管理员：所有权限
   EDITOR         // 编辑：内容管理权限
   USER           // 普通用户：前端用户
+}
+
+enum ProductType {
+  PHYSICAL       // 实体产品
+  DIGITAL        // 数字产品
+  HYBRID         // 混合产品（包含实体和数字内容）
+}
+
+enum DownloadStatus {
+  ACTIVE         // 可下载
+  EXPIRED        // 已过期
+  SUSPENDED      // 已暂停
+  EXHAUSTED      // 下载次数已用完
 }
 
 enum Status {
