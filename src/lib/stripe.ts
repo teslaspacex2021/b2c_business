@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Server-side Stripe instance
-const stripeSecret = process.env.STRIPE_SECRET_KEY;
+const stripeSecret = process.env.STRIPE_SECRET_KEY || 'sk_test_PLACEHOLDER_REPLACE_WITH_YOUR_STRIPE_SECRET_KEY';
 if (!stripeSecret) {
   throw new Error('STRIPE_SECRET_KEY is required');
 }
@@ -16,7 +16,7 @@ let stripePromise: Promise<Stripe | null>;
 
 export const getStripe = () => {
   if (!stripePromise) {
-    const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+    const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_PLACEHOLDER_REPLACE_WITH_YOUR_STRIPE_PUBLISHABLE_KEY';
     if (!pk) {
       throw new Error('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is required');
     }

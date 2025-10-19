@@ -8,26 +8,26 @@ import HeroSection from '@/components/HeroSection';
 import { prisma } from '@/lib/db';
 
 export const metadata: Metadata = {
-  title: 'Home - International Trade Solutions',
-  description: 'Discover high-quality products for international trade. Connect with reliable suppliers and expand your business globally.',
-  keywords: ['international trade', 'B2B business', 'global trade', 'export', 'import', 'business solutions'],
+  title: 'Home - Premium Consumer Products',
+  description: 'Discover high-quality consumer products with exceptional service. Shop premium products with reliable quality and fast delivery.',
+  keywords: ['consumer products', 'B2C business', 'online shopping', 'quality products', 'e-commerce', 'retail'],
   openGraph: {
-    title: 'B2B Business - International Trade Solutions',
-    description: 'Discover high-quality products for international trade. Connect with reliable suppliers and expand your business globally.',
+    title: 'B2C Business - Premium Consumer Products',
+    description: 'Discover high-quality consumer products with exceptional service. Shop premium products with reliable quality and fast delivery.',
     type: 'website',
     images: [
       {
         url: '/images/hero-pattern.svg',
         width: 1200,
         height: 630,
-        alt: 'B2B Business - International Trade Solutions',
+        alt: 'B2C Business - Premium Consumer Products',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'B2B Business - International Trade Solutions',
-    description: 'Discover high-quality products for international trade. Connect with reliable suppliers and expand your business globally.',
+    title: 'B2C Business - Premium Consumer Products',
+    description: 'Discover high-quality consumer products with exceptional service. Shop premium products with reliable quality and fast delivery.',
     images: ['/images/hero-pattern.svg'],
   },
 };
@@ -84,10 +84,10 @@ export default async function Home() {
               Why Choose Us
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Comprehensive Solutions for Global Trade
+              Premium Products for Every Need
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              We provide end-to-end solutions for your international trade needs with unmatched quality and service
+              We provide high-quality consumer products with exceptional service and reliable delivery
             </p>
           </div>
           
@@ -101,7 +101,7 @@ export default async function Home() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  All products undergo rigorous quality control to meet international standards and certifications
+                  All products undergo rigorous quality control to meet the highest consumer standards and certifications
                 </CardDescription>
               </CardContent>
             </Card>
@@ -148,7 +148,7 @@ export default async function Home() {
               Discover Our Product Categories
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Explore our comprehensive range of high-quality products designed for international trade
+              Explore our comprehensive range of high-quality consumer products designed for modern living
             </p>
           </div>
           
@@ -160,7 +160,7 @@ export default async function Home() {
               <CardHeader>
                 <CardTitle className="group-hover:text-primary transition-colors">Electronics</CardTitle>
                 <CardDescription className="text-base">
-                  High-tech electronic components and devices for various industries
+                  High-tech electronic devices and gadgets for modern consumers
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -180,7 +180,7 @@ export default async function Home() {
               <CardHeader>
                 <CardTitle className="group-hover:text-primary transition-colors">Machinery</CardTitle>
                 <CardDescription className="text-base">
-                  Industrial machinery and equipment for manufacturing processes
+                  Home appliances and equipment for everyday convenience
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -200,7 +200,7 @@ export default async function Home() {
               <CardHeader>
                 <CardTitle className="group-hover:text-primary transition-colors">Materials</CardTitle>
                 <CardDescription className="text-base">
-                  Raw materials and components for construction and manufacturing
+                  Quality materials and accessories for home and lifestyle
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -227,7 +227,7 @@ export default async function Home() {
               Industry News & Updates
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Stay informed with the latest trends, insights, and news in international trade and business
+              Stay informed with the latest trends, insights, and news in consumer products and lifestyle
             </p>
           </div>
           
@@ -317,10 +317,10 @@ export default async function Home() {
             🚀 Ready to Get Started?
           </Badge>
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Ready to Expand Your Business Globally?
+            Ready to Discover Premium Products?
           </h2>
           <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-            Join thousands of successful businesses who trust us for their international trade needs. Get your personalized quote today.
+            Join thousands of satisfied customers who trust us for their quality product needs. Get your personalized quote today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg">

@@ -539,14 +539,14 @@ enum PaymentMethod {
 model SiteConfig {
   id              String   @id @default(cuid())
   // 网站基本信息
-  siteName        String   @default("B2B Business Platform")
-  siteDescription String?  @default("Professional B2B Business Solutions")
+  siteName        String   @default("B2C Business Platform")
+  siteDescription String?  @default("Premium Consumer Products & Solutions")
   logo            String?  // Logo图片URL
   favicon         String?  // 网站图标URL
   
   // 首页横幅配置
-  heroTitle       String   @default("Welcome to B2B Business Platform")
-  heroSubtitle    String?  @default("Discover our comprehensive range of high-quality products")
+  heroTitle       String   @default("Your Gateway to Quality Products")
+  heroSubtitle    String?  @default("Discover premium consumer products with reliable quality and exceptional service")
   heroImage       String?  // 横幅背景图片URL
   heroButtonText  String   @default("Explore Products")
   heroButtonLink  String   @default("/product")
@@ -555,16 +555,16 @@ model SiteConfig {
   navigationItems Json     @default("[{\"name\":\"Home\",\"href\":\"/\"},{\"name\":\"Products\",\"href\":\"/product\"},{\"name\":\"Blog\",\"href\":\"/blog\"},{\"name\":\"About\",\"href\":\"/about\"},{\"name\":\"Contact\",\"href\":\"/contact\"}]")
   
   // 联系信息
-  companyName     String?  @default("B2B Business Co.")
-  companyAddress  String?  @default("123 Business Street, City, Country")
+  companyName     String?  @default("B2C Business Ltd.")
+  companyAddress  String?  @default("123 Commerce Street, City, Country")
   companyPhone    String?  @default("+1 (555) 123-4567")
-  companyEmail    String?  @default("info@b2bbusiness.com")
+  companyEmail    String?  @default("info@b2cbusiness.com")
   
   // 社交媒体链接
   socialLinks     Json?    @default("{\"facebook\":\"\",\"twitter\":\"\",\"linkedin\":\"\",\"instagram\":\"\"}")
   
   // 页脚配置
-  footerText      String?  @default("© 2025 B2B Business Platform. All rights reserved.")
+  footerText      String?  @default("© 2025 B2C Business Platform. All rights reserved.")
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

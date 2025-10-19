@@ -60,7 +60,7 @@ export default function Header() {
                 </div>
               )}
               <span className="text-xl font-bold text-primary">
-                {config?.siteName || 'B2B Business'}
+                {config?.siteName || 'B2C Business'}
               </span>
             </Link>
           </div>

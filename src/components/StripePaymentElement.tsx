@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 
-  'pk_test_51R2laMI1rKnXAiuHNfFfNNzLIfYekWFocalFEuyrsaLmPqCBm5a9Z6N10uj7hEVjOBmBkj28JEkDnLqL9WyCtJth00d0jbN7Z0'
+  'pk_test_PLACEHOLDER_REPLACE_WITH_YOUR_STRIPE_PUBLISHABLE_KEY'
 );
 
 interface StripePaymentElementProps {
@@ -51,6 +51,16 @@ function CheckoutForm({ amount, productId, productTitle, onSuccess, onError }: C
 
     setIsLoading(true);
     setMessage(null);
+
+    // For development: simulate payment success
+    if (process.env.NODE_ENV === 'development') {
+      setTimeout(() => {
+        setIsLoading(false);
+        onSuccess?.(null);
+        toast.success('Payment successful! (Development Mode)');
+      }, 2000);
+      return;
+    }
 
     const { error } = await stripe.confirmPayment({
       elements,
@@ -90,12 +100,49 @@ function CheckoutForm({ amount, productId, productTitle, onSuccess, onError }: C
           </div>
         </div>
 
-        <PaymentElement 
-          options={{
-            layout: 'tabs',
-            paymentMethodOrder: ['card', 'apple_pay', 'google_pay']
-          }}
-        />
+        {process.env.NODE_ENV === 'development' ? (
+          <div className="space-y-4 p-4 border rounded-lg bg-muted/20">
+            <div className="text-sm text-muted-foreground mb-2">Development Mode - Mock Payment Form</div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium">Card Number</label>
+                <input 
+                  type="text" 
+                  placeholder="4242 4242 4242 4242" 
+                  className="w-full p-2 border rounded mt-1"
+                  disabled
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-sm font-medium">Expiry</label>
+                  <input 
+                    type="text" 
+                    placeholder="12/25" 
+                    className="w-full p-2 border rounded mt-1"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">CVC</label>
+                  <input 
+                    type="text" 
+                    placeholder="123" 
+                    className="w-full p-2 border rounded mt-1"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <PaymentElement 
+            options={{
+              layout: 'tabs',
+              paymentMethodOrder: ['card', 'apple_pay', 'google_pay']
+            }}
+          />
+        )}
       </div>
 
       {message && (
@@ -167,15 +214,19 @@ export default function StripePaymentElement({
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log('Payment intent response:', data);
         if (data.error) {
+          console.error('Payment intent error:', data.error);
           setError(data.error);
           onError?.(data.error);
         } else {
+          console.log('Payment intent created successfully:', data.paymentIntentId);
           setClientSecret(data.clientSecret);
         }
         setLoading(false);
       })
       .catch((err) => {
+        console.error('Payment intent fetch error:', err);
         setError('Failed to initialize payment');
         onError?.('Failed to initialize payment');
         setLoading(false);
@@ -224,10 +275,10 @@ export default function StripePaymentElement({
   const appearance = {
     theme: 'stripe' as const,
     variables: {
-      colorPrimary: 'hsl(var(--primary))',
-      colorBackground: 'hsl(var(--background))',
-      colorText: 'hsl(var(--foreground))',
-      colorDanger: 'hsl(var(--destructive))',
+      colorPrimary: '#2563eb',
+      colorBackground: '#ffffff',
+      colorText: '#1f2937',
+      colorDanger: '#dc2626',
       fontFamily: 'system-ui, sans-serif',
       spacingUnit: '4px',
       borderRadius: '6px',

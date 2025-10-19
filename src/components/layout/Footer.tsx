@@ -63,11 +63,11 @@ export default function Footer() {
                 </div>
               )}
               <span className="text-xl font-bold text-primary">
-                {config?.siteName || 'B2B Business'}
+                {config?.siteName || 'B2C Business'}
               </span>
             </div>
             <p className="text-muted-foreground text-sm leading-6">
-              {config?.siteDescription || 'Leading provider of high-quality products for international trade. Connecting businesses worldwide with reliable solutions.'}
+              {config?.siteDescription || 'Leading provider of high-quality consumer products. Connecting customers worldwide with reliable solutions and exceptional service.'}
             </p>
             <SocialMediaLinks variant="footer" position="footer" />
           </div>

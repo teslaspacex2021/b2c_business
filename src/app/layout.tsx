@@ -11,25 +11,25 @@ import { headers } from 'next/headers';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: {
-    default: 'B2B Business - International Trade Solutions',
-    template: '%s | B2B Business'
+    default: 'B2C Business - Premium Consumer Products',
+    template: '%s | B2C Business'
   },
-  description: 'Leading provider of high-quality products for international trade. Connecting businesses worldwide with reliable solutions.',
-  keywords: ['B2B', 'international trade', 'business', 'products', 'export', 'import'],
-  authors: [{ name: 'B2B Business' }],
-  creator: 'B2B Business',
+  description: 'Leading provider of high-quality consumer products. Connecting customers worldwide with reliable solutions and exceptional service.',
+  keywords: ['B2C', 'consumer products', 'online shopping', 'quality products', 'e-commerce', 'retail'],
+  authors: [{ name: 'B2C Business' }],
+  creator: 'B2C Business',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://b2bbusiness.com',
-    title: 'B2B Business - International Trade Solutions',
-    description: 'Leading provider of high-quality products for international trade.',
-    siteName: 'B2B Business',
+    url: 'https://b2cbusiness.com',
+    title: 'B2C Business - Premium Consumer Products',
+    description: 'Leading provider of high-quality consumer products.',
+    siteName: 'B2C Business',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'B2B Business - International Trade Solutions',
-    description: 'Leading provider of high-quality products for international trade.',
+    title: 'B2C Business - Premium Consumer Products',
+    description: 'Leading provider of high-quality consumer products.',
   },
   robots: {
     index: true,

@@ -47,13 +47,13 @@ export default function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
         <div className="text-center">
           <Badge variant="secondary" className="mb-4 bg-white/20 text-white hover:bg-white/30">
-            🌍 Global Trade Solutions
+            🛍️ Premium Consumer Products
           </Badge>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-            {config?.heroTitle || 'Your Gateway to Global Trade'}
+            {config?.heroTitle || 'Your Gateway to Quality Products'}
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
-            {config?.heroSubtitle || 'Connecting businesses worldwide with high-quality products and reliable solutions for international trade success'}
+            {config?.heroSubtitle || 'Discover premium consumer products with reliable quality and exceptional service for modern living'}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg">

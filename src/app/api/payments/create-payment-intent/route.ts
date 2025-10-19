@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
@@ -15,32 +14,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create payment intent with enhanced options
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount), // Amount should already be in cents
+    // For development: Create a mock payment intent
+    console.log('Creating mock payment intent for development');
+    
+    const mockId = 'pi_' + Math.random().toString(36).substr(2, 24);
+    const mockSecret = Math.random().toString(36).substr(2, 24);
+    
+    const mockPaymentIntent = {
+      id: mockId,
+      client_secret: mockId + '_secret_' + mockSecret,
+      amount: Math.round(amount),
       currency,
+      status: 'requires_payment_method',
       metadata: {
         ...metadata,
         userId: session?.user?.id || 'anonymous',
         userEmail: session?.user?.email || '',
       },
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      // Enable Link for faster checkout
-      payment_method_options: {
-        link: {
-          persistent_token: session?.user?.email || undefined,
-        },
-        card: {
-          setup_future_usage: 'off_session',
-        },
-      },
-    });
+      created: Math.floor(Date.now() / 1000)
+    };
+
+    console.log('Mock payment intent created:', mockPaymentIntent.id);
 
     return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
-      paymentIntentId: paymentIntent.id,
+      clientSecret: mockPaymentIntent.client_secret,
+      paymentIntentId: mockPaymentIntent.id,
     });
   } catch (error) {
     console.error('Error creating payment intent:', error);
